@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>JAZZIFY</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">    <style>
+.nowp{
+                margin-left: 100px;
+                font-size: large;
+
+        }
+
+        .playlist-item {
+    width: 200px;
+    height: 200px;
+    margin-bottom: 100px;
+    padding: 10px;
+    color: white;
+    text-align: center;
+    border-radius: 12px;
+    cursor: pointer;
+}
+.playlist-item p {
+    cursor: pointer;
+}
+
+.playlist-songs {
+    display: none;
+}
+
+.p1{
+    background-image: url('posters/podcast2.jpg');  
+    background-size: cover;
+    background-position: center;  
+    background-repeat: no-repeat; 
+}
+.p2{
+    background-image: url('posters/chillvibes.jpg');  
+    background-size: cover;
+    background-position: center;  
+    background-repeat: no-repeat; 
+}
+.p3{
+    background-image: url('posters/gym_work.jpg');  
+    background-size: cover;
+    background-position: center;  
+    background-repeat: no-repeat; 
+}
+.p4{
+    background-image: url('posters/party.jpg');  
+    background-size: cover;
+    background-position: center;  
+    background-repeat: no-repeat; 
+}
+.p5{
+    background-image: url('posters/feel_good.png');  
+    background-size: cover;
+    background-position: center;  
+    background-repeat: no-repeat; 
+}
+
+
+        .playlist-item:hover {
+            transform: scale(1.05);
+            background-color: #6a6a6a;
+        }
+
+        .playlist-songs {
+
+            display: none; /* Hidden initially */
+            margin-top: 10px;
+            padding-left: 20px;
+        }
+
+        .playlist-songs .song-item {
+            width: 100%;
+            margin-top: 5px;
+            background-color: #333;
+            cursor: pointer;
+            border-radius: 8px;
+            padding: 8px;
+            
+        }
+
+
+        .slideshow-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .slideshow-slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            transition: opacity 1s ease-in-out;
+            opacity: 0;
+        }
+
+        .slideshow-slide.active {
+            opacity: 1;
+        }
+
+        
+        .player-container h2 {
+            color: #ffffff;
+        }
+
+  
+        /* Adjusted styling for song-item to match singer-profile size */
+
+.content{
+    padding-bottom: 100px;;
+}
+
+        .song-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 50px;
+    padding: 0;
+}
+
+.song-item, .new-section{
+    width: 200px; /* Set same width for both */
+    padding: 20px;
+    background-color: #4a4a4a;
+    color: #ffffff;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    text-align: center;
+}
+
+.song-item:hover, .new-section:hover{
+    transform: scale(1.05);
+    background-color: #6a6a6a;
+}
+
+.song-item img, .new-section img {
+    width: 100%;
+    height: 150px; /* Consistent height for images */
+    border-radius: 8px;
+    object-fit: cover;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.song-item p, .new-section p {
+    margin: 8px 0 0;
+    font-weight: bold;
+    font-size: 1rem; /* Adjust text size to match the profile div */
+}
+
+        .audio-player {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #1c1c1c; /* Darker background for the player */
+    padding: 10px;
+    z-index: 10;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.3); /* Shadow for separation */
+}
+
+.audio-player audio {
+    width: 90%;
+    outline: none;
+}
+
+.audio-player button {
+       margin-left: 100px; 
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    background-color: #053f58; /*Green */
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s;
+}
+
+.audio-player button:hover {
+    background-color: #052a42; /* Darker green */
+    transform: translateY(-3px);
+}
+
+/* Add padding at the bottom to prevent the player from covering content */
+.main-content {
+    padding-bottom: 80px; /* Adjust based on player height */
+}
+.hiddensongs{
+    display: none;
+
+}
+    </style>
+</head>
+<body class="bg-black text-white">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <div class="w-1/6 bg-gray-900 p-4">
+            <div class="flex items-center mb-6">
+                <span class="text-xl font-semibold ml-2">Jazzify</span>
+            </div>
+            <div class="space-y-4">
+                <div class="flex items-center space-x-2 hover:bg-gray-800 p-2 rounded">
+                    <i class="fas fa-home"></i>
+                    <a href="#ss">Home</a>
+                </div>
+                <div class="flex items-center space-x-2 hover:bg-gray-800 p-2 rounded">
+                    <i class="fa-solid fa-wand-sparkles"></i>
+                    <a href="#new-releases">New releases</a>
+                </div>
+                <div class="flex items-center space-x-2 hover:bg-gray-800 p-2 rounded">
+                    <i class="fa-solid fa-arrow-trend-up"></i>
+                    <a href="#Trending-songs">Trending Songs</a>
+                </div>
+                <div class="flex items-center space-x-2 hover:bg-gray-800 p-2 rounded">
+                    <i class="fa-regular fa-circle-play"></i>
+                    <a href="#Playlists">Playlist</a>
+                </div>
+            </div>
+        </div>
+        <!-- Main Content -->
+        <div class="flex-1 p-4 overflow-y-auto">
+            <!-- Header -->
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center space-x-4">
+                    <i class="fas fa-chevron-left text-2xl cursor-pointer"></i>
+                    <i class="fas fa-chevron-right text-2xl cursor-pointer"></i>
+                    <div class="relative">
+                        <input class="w-[1100px] bg-gray-800 text-white rounded-full pl-10 pr-4 py-2 focus:outline-none srch"  placeholder="What do you want to play?" type="text" id="searchInput"/>
+                        <i class="fas fa-search absolute left-3 top-2 text-gray-400"></i>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                   
+                </div>
+            </div>
+            <!-- Slideshow -->
+            <div class="mb-6" id="ss">
+                <div class="slideshow-container h-64 rounded-lg overflow-hidden">
+                
+                    <div class="slideshow-slide active">
+                        <img alt="Poster 2" class="w-full h-full object-cover" src="posters/createdp2.png"/>
+                    </div>
+                    <div class="slideshow-slide">
+                        <img alt="Poster 3" class="w-full h-full object-cover" src="posters/createdpp1.png"/>
+                    </div>
+                </div>
+            </div>
+            <!-- Song List -->
+            
+            <div class="content">
+
+                <div class="hiddensongs">
+                    <div class="song-item" data-file="songs/Tum_Se.mp3">
+                        <img src="posters/tbmuj.jpg" alt="Tum Se">
+                        <p>Tum Se</p>
+                    </div>
+                    <div class="song-item" data-file="songs/Viva_La_Vida.mp3">
+                        <img src="posters/vivalavida.jpg" alt="Tum Se">
+                        <p>Viva La Vida</p>
+                    </div>
+                    <div class="song-item" data-file="songs/Dildaara.mp3">
+                        <img src="posters/RaOne2.jpg" alt="Dildaara">
+                        <p>Dildaara</p>
+                    </div>
+                    <div class="song-item" data-file="songs/ishq.mp3">
+                        <img src="posters/ishq_pic2.jpg" alt="Ishq">
+                        <p>Ishq</p>
+                    </div>
+                    
+                   <div class="song-item" data-file="songs/Akhiyaan_Gulaab.mp3">
+                        <img src="posters/tbmuj2.jpg" alt="Tum Se">
+                        <p>Akhiyaan Gulaab</p>
+                    </div>
+                    <div class="song-item" data-file="songs/Instant_Crush.mp3">
+                        <img src="posters/instantcrushp.jpg" alt="Tum Se">
+                        <p>Instant Crush</p>
+                    </div>
+                    <div class="song-item" data-file="songs/Co2.mp3">
+                        <img src="posters/co2p.jpg" alt="Tum Se">
+                        <p>CO2</p>
+                    </div>
+                    <div class="song-item" data-file="songs/Golden_Hour.mp3">
+                        <img src="posters/goldenp.jpg" alt="Tum Se">
+                        <p>Golden Hour</p>
+                    </div>
+                    <div class="song-item" data-file="songs/Attention.mp3">
+                        <img src="posters/attentionp.png" alt="Attention">
+                        <p>Attention</p>
+                    </div>
+                    <div class="song-item" data-file="songs/Badtameez_Dil.mp3">
+                        <img src="posters/badtameezdil.jpg" alt="Tum Se">
+                        <p>Badtameez Dil</p>
+                    </div>
+                    <div class="song-item" data-file="songs/Dusk_Till_Dawn.mp3">
+                        <img src="posters/dusktilldawn.jpg" alt="Tum Se">
+                        <p>Dusk Till Dawn</p>
+                    </div>
+                    <div class="song-item" data-file="songs/Haule_Haule.mp3">
+                        <img src="posters/haulehaule.jpg" alt="Tum Se">
+                        <p>Haule Haule</p>
+                    </div>
+                    <div class="song-item" data-file="songs/Kala_Chashma.mp3">
+                        <img src="posters/kalachashma.jpg" alt="Tum Se">
+                        <p>Kala Chashma</p>
+                    </div>
+                    <div class="song-item" data-file="songs/Pasoori.mp3">
+                        <img src="posters/pasoorip.jpg" alt="Tum Se">
+                        <p>Pasoori</p>
+                    </div>
+                    <div class="song-item" data-file="songs/Senorita.mp3">
+                        <img src="posters/senoritap.jpg" alt="Tum Se">
+                        <p>Senorita</p>
+                    </div>
+                    <div class="song-item" data-file="songs/Sky_Full_Of_Stars.mp3">
+                        <img src="posters/askyfull.png" alt="Tum Se">
+                        <p>A Sky Full Of Stars</p>
+                    </div>
+                    <div class="song-item" data-file="songs/Steal_My_Girl.mp3">
+                        <img src="posters/stealmygirl.jpg" alt="Tum Se">
+                        <p>Steal My Girl</p>
+                    </div>
+                    <div class="song-item" data-file="songs/Stereo_Hearts.mp3">
+                        <img src="posters/stereohearts.jpg" alt="Tum Se">
+                        <p>Stereo Hearts</p>
+                    </div>
+                    <div class="song-item" data-file="songs/Tu_Aake.mp3">
+                        <img src="posters/tuaakedekhle.jpg" alt="Tum Se">
+                        <p>Tu Aake Dekhle</p>
+                    </div>
+                    <div class="song-item" data-file="songs/Chaleya.mp3">
+                        <img src="posters/chaleyap.jpg" alt="Tum Se">
+                        <p>Chaleya</p>
+                    </div>
+                    <div class="song-item" data-file="songs/Ek_Ladki_ko.mp3">
+                        <img src="posters/ekladki.jpg" alt="Tum Se">
+                        <p>Ek Ladki Ko Dekha To Aisa Laga</p>
+                    </div>
+                    <div class="song-item" data-file="songs/Espresso.mp3">
+                        <img src="posters/espressop.jpg" alt="Tum Se">
+                        <p>Espresso</p>
+                    </div>
+                    <div class="song-item" data-file="songs/Iris.mp3">
+                        <img src="posters/irisp.jpg" alt="Tum Se">
+                        <p>Iris</p>
+                    </div>
+                    <div class="song-item" data-file="songs/Love_Of.mp3">
+                        <img src="posters/loml.jpg" alt="Tum Se">
+                        <p>Love Of My Life</p>
+                    </div>
+                    <div class="song-item" data-file="songs/Money.mp3">
+                        <img src="posters/moneyp.jpg" alt="Tum Se">
+                        <p>Money</p>
+                    </div>
+                    <div class="song-item" data-file="songs/Montero.mp3">
+                        <img src="posters/monterop.jpg" alt="Tum Se">
+                        <p>Montero</p>
+                    </div>
+                    <div class="song-item" data-file="songs/Naina.mp3">
+                        <img src="posters/nainap.jpg" alt="Tum Se">
+                        <p>Naina</p>
+                    </div>
+                    <div class="song-item" data-file="songs/O_Re_piya.mp3">
+                        <img src="posters/orepiya.jpg" alt="Tum Se">
+                        <p>O Re Piya</p>
+                    </div>
+                    <div class="song-item" data-file="songs/Paradise.mp3">
+                        <img src="posters/paradisep.jpg" alt="Tum Se">
+                        <p>Paradise</p>
+                    </div>
+                    <div class="song-item" data-file="songs/Reminder.mp3">
+                        <img src="posters/reminderp.jpg" alt="Tum Se">
+                        <p>Reminder</p>
+                    </div>
+                    <div class="song-item" data-file="songs/She_Move.mp3">
+                        <img src="posters/shemoveitlike.jpg" alt="Tum Se">
+                        <p>She Move It Like</p>
+                    </div>
+                    <div class="song-item" data-file="songs/Teri_Deewani.mp3">
+                        <img src="posters/terideewani.jpg" alt="Tum Se">
+                        <p>Teri Deewani</p>
+                    </div>
+                    <div class="song-item" data-file="songs/Too_Sweet.mp3">
+                        <img src="posters/toosweet.jpg" alt="Tum Se">
+                        <p>Too Sweet</p>
+                    </div>
+                   
+
+
+
+
+                </div>
+                            <div class="song-list" id="songList">
+                                <div class="song-item" data-file="songs/choo_loo.mp3">
+                                    <img src="posters/choo_loo_pic.jpeg" alt="CHoo Loo - Local Train"> 
+                                    <p>Choo Loo</p>
+                                </div>
+                               
+                           
+                                <div class="song-item" data-file="songs/Her.mp3">
+                                    <img src="posters/her_jvke.jpg" alt="Her">
+                                    <p>Her</p>
+                                </div>
+                                <div class="song-item" data-file="songs/Hass_Hass.mp3">
+                                    <img src="posters/hass.jpg" alt="Hass Hass">
+                                    <p>Hass Hass</p>
+                                </div>
+                                <div class="song-item" data-file="songs/Blinding_lights.mp3">
+                                    <img src="posters/Blights.jpg" alt="Ishq">
+                                    <p>Blinding Lights</p>
+                                </div>
+                                <div class="song-item" data-file="songs/Kabhi_Jo_Badal_Barse.mp3">
+                                    <img src="posters/jackpot.jpg" alt="Kabhi Jo Badal Barse"> 
+                                    <p>Kabhi Jo Badal Barse</p>
+                                </div>
+                                <div class="song-item" data-file="songs/O_Sajni_Re.mp3">
+                                    <img src="posters/lladies.jpg" alt="CHoo Loo - Local Train"> 
+                                    <p>O Sajni Re</p>
+                                </div>
+                                <div class="song-item" data-file="songs/Lover.mp3">
+                                    <img src="posters/lover.jpg" alt="Lover">
+                                    <p>Lover</p>
+                                </div>
+                                <div class="song-item" data-file="songs/Ik_Vaari_Aa.mp3">
+                                    <img src="posters/raabta.jpg" alt="Ik Vaari Aa"> 
+                                    <p>Ik Vaari Aa</p>
+                                </div>
+                                <div class="song-item" data-file="songs/Sahiba.mp3">
+                                    <img src="posters/sahibaa.jpg" alt="Saahiba"> 
+                                    <p>Saahiba</p>
+                                </div>
+                                
+                                
+                                
+                               
+                                
+                            </div>
+                            <h1 id="new-releases" class="text-3xl font-bold mb-6" style="margin-top: 25px;">
+                                New releases
+                               </h1>
+            
+                            <div class="song-list" id="songList">
+                                <div class="new-section" data-file="songs/Double_Take.mp3">
+                                    <img src="posters/dtake.jpg" alt="Double Take"> 
+                                    <p>Double Take</p>
+                                </div>
+                                <div class="new-section" data-file="songs/Heeriye.mp3">
+                                    <img src="posters/heeriye_p.jpg" alt="Heeriye"> 
+                                    <p>Heeriye</p>
+                                </div>
+                                <div class="new-section" data-file="songs/End_Of_beginning.mp3">
+                                    <img src="posters/eof.png" alt="CHoo Loo - Local Train"> 
+                                    <p>End Of Beginning</p>
+                                </div>
+                                <div class="new-section" data-file="songs/Jiya.mp3">
+                                    <img src="posters/jiya_jigra.jpg" alt="Jiya"> 
+                                    <p>Jiya</p>
+                                    
+                                </div>
+                                <div class="new-section" data-file="songs/Kasturi.mp3">
+                                    <img src="posters/kasturi_amar.jpg" alt="CHoo Loo - Local Train"> 
+                                    <p>Kasturi</p>
+                                </div>
+                                <div class="new-section" data-file="songs/Those_Eyes.mp3">
+                                    <img src="posters/teyes.jpg" alt="CHoo Loo - Local Train"> 
+                                    <p>Those Eyes</p>
+                                </div>
+                                <div class="new-section" data-file="songs/Tenu_Sang_Rakhna (1).mp3">
+                                    <img src="posters/tenu_sang.jpg" alt="CHoo Loo - Local Train">
+                                    <p>Tenu Sang Rakhna</p>
+                                </div>
+                                <div class="new-section" data-file="songs/Cruel_Summer.mp3">
+                                    <img src="posters/Cruel_post.jpg" alt="CHoo Loo - Local Train">
+                                    <p>Cruel Summer</p>
+                                </div>
+                               </div>
+                               <h1 class="text-3xl font-bold mb-6" style="margin-top: 25px;">
+                               Trending Songs For You
+                               </h1>
+            
+                            <div id="Trending-songs" class="song-list" id="songList">
+                                <div class="new-section" data-file="songs/soulmates.mp3">
+                                    <img src="posters/soulmate.jpg" alt="CHoo Loo - Local Train"> 
+                                    <p>Soulmate</p>
+                                </div>
+                                <div class="new-section" data-file="songs/Save_Your_Tears.mp3">
+                                    <img src="posters/saveyourtearsp.jpg" alt="CHoo Loo - Local Train"> 
+                                    <p>Save Your Tears</p>
+                                </div>
+                                <div class="new-section" data-file="songs/wishes.mp3">
+                                    <img src="posters/wishesp.jpg" alt="CHoo Loo - Local Train"> 
+                                    <p>Wishes</p>
+                                </div>
+                                <div class="new-section" data-file="songs/About_you.mp3">
+                                    <img src="posters/aboutyoup.jpg" alt="CHoo Loo - Local Train"> 
+                                    <p>About You</p>
+                                    
+                                </div>
+                                <div class="new-section" data-file="songs/With_You.mp3">
+                                    <img src="posters/withyoup.jpg" alt="CHoo Loo - Local Train"> 
+                                    <p>With You</p>
+                                </div>
+                                <div class="new-section" data-file="songs/Raanjhan.mp3">
+                                    <img src="posters/raanjhanp.jpg" alt="CHoo Loo - Local Train"> 
+                                    <p>Raanjhan</p>
+                                </div>
+                                <div class="new-section" data-file="songs/Somebody_Iused.mp3">
+                                    <img src="posters/somebodyp.jpg" alt="CHoo Loo - Local Train"> 
+                                    <p>Somebody That I Used To Know</p>
+                                </div>
+                                <div class="new-section" data-file="songs/Udd_Gaye.mp3">
+                                    <img src="posters/udd_gaye.jpg" alt="CHoo Loo - Local Train">
+                                    <p>Udd Gaye</p>
+                                </div>
+                               </div>
+                    <!-- Sidebar and Main Content (unchanged) -->
+        
+            
+                    <!-- Main Content -->
+                    <div class="flex-1 p-4 overflow-y-auto">
+                        <!-- Header, Slideshow, and Song List (unchanged) -->
+                        <!-- ... -->
+            
+                        <!-- Now Playing Text -->
+                        <!-- <h2 class="nowp">Now Playing: <span id="currentSong">Select a song from the list or play a random one</span></h2> -->
+                        <!-- Playlists Section -->
+                        <div class="playlist-section" id="Playlists">
+                            <h1 class="text-3xl font-bold mb-6" style="margin-top: 25px;">
+                                Playlists
+                               </h1>
+                            <div class="song-list" id="playlistList">
+                                <!-- Playlist Item 1 -->
+                                <div class="playlist-item p1" data-playlist="1">
+                                    <p>Podcast</p>
+
+                                    <div class="playlist-songs">
+                                        <div class="song-item" data-file="songs/podcast1.mp3">
+                                            <p>Podcast 1</p>
+                                        </div>
+                                        <div class="song-item" data-file="songs/podcast2.mp3">
+                                            <p>Podcast 2</p>
+                                        </div>
+                                        <div class="song-item" data-file="songs/podcast3.mp3">
+                                            <p>Podcast 3</p>
+                                        </div>
+                                    </div>
+                                </div>
+            
+                                <!-- Playlist Item 2 -->
+                                <div class="playlist-item p2" data-playlist="2">
+                                    <p>Chill Vibes</p>
+                                    <div class="playlist-songs">
+                                        <div class="song-item" data-file="songs/Those_Eyes.mp3">
+                                            <p>Those Eyes</p>
+                                        </div>
+                                        <div class="song-item" data-file="songs/Yellow.mp3">
+                                            <p>Yellow</p>
+                                        </div>
+                                        <div class="song-item" data-file="songs/O_Sajni_Re.mp3">
+                                            <p>Sajni Re</p>
+                                        </div>
+                                    </div>
+                                </div>
+            
+                                <div class="playlist-item p3" data-playlist="3">
+                                    <p>Workout Vibes</p>
+                                    <div class="playlist-songs">
+                                        <div class="song-item" data-file="songs/Blinding_lights.mp3">
+                                            <p>Blinding Lights</p>
+                                        </div>
+                                        <div class="song-item" data-file="songs/Kala_Chashma.mp3">
+                                            <p>Kala Chashma</p>
+                                        </div>
+                                        <div class="song-item" data-file="songs/Badtameez_Dil.mp3">
+                                            <p>Badtameez Dil</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="playlist-item p4" data-playlist="4">
+                                    <p>Party Vibes</p>
+                                    <div class="playlist-songs">
+                                        <div class="song-item" data-file="songs/Wishes.mp3">
+                                            <p>Wishes</p>
+                                        </div>
+                                        <div class="song-item" data-file="songs/She_Move.mp3">
+                                            <p>She Move It Like</p>
+                                        </div>
+                                        <div class="song-item" data-file="songs/Counting_Stars.mp3">
+                                            <p>Counting Stars</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="playlist-item p5" data-playlist="5">
+                                    <p>Feel Good Vibes</p>
+                                    <div class="playlist-songs">
+                                        <div class="song-item" data-file="songs/Udd_Gaye.mp3">
+                                            <p>Udd Gaye</p>
+                                        </div>
+                                        <div class="song-item" data-file="songs/Senorita.mp3">
+                                            <p>Senorita</p>
+                                        </div>
+                                        <div class="song-item" data-file="songs/Golden_Hour.mp3">
+                                            <p>Golden Hour</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+            </div>
+                        <!-- Audio Player Section (unchanged) -->
+                        <!-- ... -->
+         
+                    
+                </div>
+                <div class="audio-player">
+                    <h2 class="nowp"> <span id="currentSong">Select a song from the list or play a random one</span></h2>
+
+                    <audio id="audioPlayer" controls>
+                        
+                        Your browser does not support the audio element.
+                    </audio> 
+                    <br>
+                    <button id="randomSongBtn">Play Random Song</button>
+                </div>
+            </div>
+    </div>
+
+        
+    <script>
+        // Slideshow functionality
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slideshow-slide');
+    
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.classList.remove('active');
+                if (i === index) {
+                    slide.classList.add('active');
+                }
+            });
+        }
+    
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            showSlide(currentSlide);
+        }
+    
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+            showSlide(currentSlide);
+        }
+    
+        // interval for automatic slideshow
+        setInterval(nextSlide, 5000); // Change slide every 5 seconds
+    
+        // Add event listeners for manual navigation
+        document.querySelector('.fa-chevron-right').addEventListener('click', nextSlide);
+        document.querySelector('.fa-chevron-left').addEventListener('click', prevSlide);
+    
+        // Song selection functionality
+        const songItems = document.querySelectorAll('.song-item,.new-section');
+        const audioPlayer = document.getElementById('audioPlayer');
+        const currentSongText = document.getElementById('currentSong');
+        const randomSongBtn = document.getElementById('randomSongBtn');
+        const searchInput = document.querySelector('srch');
+        let currentSongIndex=0;
+        songItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const songFile = item.getAttribute('data-file');
+                audioPlayer.src = songFile;
+                audioPlayer.play();
+                currentSongText.textContent = item.querySelector('p').textContent;
+            });
+        });
+    
+        // Play a random song
+        randomSongBtn.addEventListener('click', () => {
+            const randomIndex = Math.floor(Math.random() * songItems.length);
+            const randomSong = songItems[randomIndex];
+            const songFile = randomSong.getAttribute('data-file');
+            audioPlayer.src = songFile;
+            audioPlayer.play();
+            currentSongText.textContent = randomSong.querySelector('p').textContent;
+        });
+    
+
+
+        function playSong(index) {
+    if (index >= 0 && index < songItems.length) {
+        const songItem = songItems[index];
+        const songFile = songItem.getAttribute('data-file');
+        audioPlayer.src = songFile;
+        audioPlayer.play();
+        currentSongText.textContent = songItem.querySelector('p').textContent;
+        currentSongIndex = index; // Update the current song index
+    }
+}
+        audioPlayer.addEventListener('ended', () => {
+    const nextSongIndex = (currentSongIndex + 1) % songItems.length; // Loop back to the first song
+    playSong(nextSongIndex);
+});
+        // Search functionality
+     // Search functionality
+// Select song items and the hidden songs container
+const songItem = document.querySelectorAll('.song-item');
+const hiddenSongsContainer = document.querySelector('.hiddensongs');
+
+// Add an event listener for the search input
+const searchInpu = document.getElementById('searchInput');
+searchInpu.addEventListener('input', () => {
+    const query = searchInpu.value.toLowerCase();
+
+    // Show/hide main song items based on the search query
+    songItem.forEach(item => {
+        const songTitle = item.querySelector('p').textContent.toLowerCase();
+        if (songTitle.includes(query)) {
+            item.style.display = 'block'; // Show matching song
+        } else {
+            item.style.display = 'none'; // Hide non-matching song
+        }
+    });
+
+    // Show/hide hidden songs based on the search query
+    const hiddenSongs = document.querySelectorAll('.hiddensongs .song-item');
+    
+    if (query === '') {
+    hiddenSongsContainer.style.display = 'none';
+} else {
+    hiddenSongsContainer.style.display = 'flex';
+    hiddenSongsContainer.style.justifyContent = "space-evenly";
+}
+
+});
+
+       
+        const playlistItems = document.querySelectorAll('.playlist-item');
+playlistItems.forEach(item => {
+    item.addEventListener('click', () => {
+        const playlistSongs = item.querySelector('.playlist-songs');
+
+        // Toggle the display of the selected playlist's songs
+        if (playlistSongs.style.display === 'none' || playlistSongs.style.display === '') {
+            playlistSongs.style.display = 'block';
+        } else {
+            playlistSongs.style.display = 'none';
+        }
+    });
+});
+
+
+
+// Song selection inside playlists
+const allSongItems = document.querySelectorAll('.song-item');
+
+
+
+
+
+allSongItems.forEach(songItem => {
+    songItem.addEventListener('click', (e) => {
+        // Prevent playlist collapse on song click
+        e.stopPropagation();
+        
+        const songFile = songItem.getAttribute('data-file');
+        audioPlayer.src = songFile;
+        audioPlayer.play();
+        currentSongText.textContent = songItem.querySelector('p').textContent;
+    });
+});
+// This will smooth scroll to the section when clicking the links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+            behavior: 'smooth'
+        });
+    });
+});
+
+
+    </script>
+</body>
+</html>

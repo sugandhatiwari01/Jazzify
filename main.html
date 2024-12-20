@@ -93,16 +93,18 @@
         }
 
         .slideshow-slide {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            transition: opacity 1s ease-in-out;
-            opacity: 0;
-        }
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+    opacity: 0;
+    transform: scale(1.05); /* Slight scale effect */
+}
 
-        .slideshow-slide.active {
-            opacity: 1;
-        }
+.slideshow-slide.active {
+    opacity: 1;
+    transform: scale(1); /* Reset to original size */
+}
 
         
         .player-container h2 {
@@ -116,6 +118,21 @@
     padding-bottom: 100px;;
 }
 
+@media (max-width: 768px) {
+    .audio-player {
+        padding: 8px;
+    }
+
+    .audio-player audio {
+        width: 80%;
+    }
+
+    .audio-player button {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+    }
+}
+
         .song-list {
     display: flex;
     flex-wrap: wrap;
@@ -125,7 +142,7 @@
     padding: 0;
 }
 
-.song-item, .new-section{
+.song-item,.song-item1, .new-section{
     width: 200px; /* Set same width for both */
     padding: 20px;
     background-color: #4a4a4a;
@@ -136,7 +153,7 @@
     text-align: center;
 }
 
-.song-item:hover, .new-section:hover{
+.song-item:hover,.song-item1:hover .new-section:hover{
     transform: scale(1.05);
     background-color: #6a6a6a;
 }
@@ -191,7 +208,10 @@
     background-color: #052a42; /* Darker green */
     transform: translateY(-3px);
 }
+.buttons{
+    display:flex;
 
+}
 /* Add padding at the bottom to prevent the player from covering content */
 .main-content {
     padding-bottom: 80px; /* Adjust based on player height */
@@ -199,6 +219,11 @@
 .hiddensongs{
     display: none;
 
+}
+@media (max-width: 768px) {
+    .content {
+        padding-bottom: 120px; /* Increased for mobile screens */
+    }
 }
     </style>
 </head>
@@ -210,22 +235,22 @@
                 <span class="text-xl font-semibold ml-2">Jazzify</span>
             </div>
             <div class="space-y-4">
-                <div class="flex items-center space-x-2 hover:bg-gray-800 p-2 rounded">
+                <a href="#ss"> <div class="flex items-center space-x-2 hover:bg-gray-800 p-2 rounded">
                     <i class="fas fa-home"></i>
-                    <a href="#ss">Home</a>
-                </div>
+                <div>     Home </div> 
+                </div></a>
                 <div class="flex items-center space-x-2 hover:bg-gray-800 p-2 rounded">
                     <i class="fa-solid fa-wand-sparkles"></i>
-                    <a href="#new-releases">New releases</a>
+                <div>  <a href="#new-releases">New releases</a></div> 
                 </div>
-                <div class="flex items-center space-x-2 hover:bg-gray-800 p-2 rounded">
+                <a href="#Trending-songs"> <div class="flex items-center space-x-2 hover:bg-gray-800 p-2 rounded">
                     <i class="fa-solid fa-arrow-trend-up"></i>
-                    <a href="#Trending-songs">Trending Songs</a>
-                </div>
-                <div class="flex items-center space-x-2 hover:bg-gray-800 p-2 rounded">
+                <div>   Trending Songs</div> 
+                </div></a>
+                <a href="#Playlists">  <div class="flex items-center space-x-2 hover:bg-gray-800 p-2 rounded">
                     <i class="fa-regular fa-circle-play"></i>
-                    <a href="#Playlists">Playlist</a>
-                </div>
+                 <div>  Playlist</div> 
+                </div></a>
             </div>
         </div>
         <!-- Main Content -->
@@ -259,7 +284,10 @@
             <!-- Song List -->
             
             <div class="content">
-
+                <div class="song-list" id="songList">
+                    <!-- Songs will be dynamically added here -->
+                </div>
+                <div id="song-item1"></div> <!-- Container to display songs -->
                 <div class="hiddensongs">
                     <div class="song-item" data-file="songs/Tum_Se.mp3">
                         <img src="posters/tbmuj.jpg" alt="Tum Se">
@@ -400,6 +428,9 @@
 
 
                 </div>
+                <h1 id="new-releases" class="text-3xl font-bold mb-6" style="margin-top: 25px;">
+                  Top Picks
+                   </h1>
                             <div class="song-list" id="songList">
                                 <div class="song-item" data-file="songs/choo_loo.mp3">
                                     <img src="posters/choo_loo_pic.jpeg" alt="CHoo Loo - Local Train"> 
@@ -628,13 +659,19 @@
                 </div>
                 <div class="audio-player">
                     <h2 class="nowp"> <span id="currentSong">Select a song from the list or play a random one</span></h2>
-
                     <audio id="audioPlayer" controls>
-                        
                         Your browser does not support the audio element.
                     </audio> 
                     <br>
-                    <button id="randomSongBtn">Play Random Song</button>
+                    <div class="buttons">
+                    <button id="randomSongBtn">Play Random Song</button> 
+                    <button id="loadMoreBtn">Load More</button>
+                            <!-- Now Playing Text -->
+                            <!-- <h2 class="nowp">Now Playing: <span id="currentSong">Select a song from the list or play a random one</span></h2> -->
+                            <!-- Playlists Section -->
+                           
+                        </div> 
+                    </div>
                 </div>
             </div>
     </div>
@@ -676,7 +713,6 @@
         const audioPlayer = document.getElementById('audioPlayer');
         const currentSongText = document.getElementById('currentSong');
         const randomSongBtn = document.getElementById('randomSongBtn');
-        const searchInput = document.querySelector('srch');
         let currentSongIndex=0;
         songItems.forEach(item => {
             item.addEventListener('click', () => {
@@ -720,31 +756,8 @@ const songItem = document.querySelectorAll('.song-item');
 const hiddenSongsContainer = document.querySelector('.hiddensongs');
 
 // Add an event listener for the search input
-const searchInpu = document.getElementById('searchInput');
-searchInpu.addEventListener('input', () => {
-    const query = searchInpu.value.toLowerCase();
 
-    // Show/hide main song items based on the search query
-    songItem.forEach(item => {
-        const songTitle = item.querySelector('p').textContent.toLowerCase();
-        if (songTitle.includes(query)) {
-            item.style.display = 'block'; // Show matching song
-        } else {
-            item.style.display = 'none'; // Hide non-matching song
-        }
-    });
 
-    // Show/hide hidden songs based on the search query
-    const hiddenSongs = document.querySelectorAll('.hiddensongs .song-item');
-    
-    if (query === '') {
-    hiddenSongsContainer.style.display = 'none';
-} else {
-    hiddenSongsContainer.style.display = 'flex';
-    hiddenSongsContainer.style.justifyContent = "space-evenly";
-}
-
-});
 
        
         const playlistItems = document.querySelectorAll('.playlist-item');
@@ -789,6 +802,154 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         document.querySelector(this.getAttribute('href')).scrollIntoView({
             behavior: 'smooth'
         });
+    });
+});
+// API base URL
+const apiBaseUrl = 'https://api.spotify.com/v1';
+
+// Function to get the access token from Spotify using client credentials
+async function getAccessToken() {
+    const clientId = '2a8c9835e0594e07a684b3669c7fed25'; // Replace with your actual client ID
+    const clientSecret = 'd95914adfec940069d63b778e92fa09a'; // Replace with your actual client secret
+
+    const response = await fetch('https://accounts.spotify.com/api/token', {
+        method: 'POST',
+        headers: {
+            'Authorization': 'Basic ' + btoa(clientId + ':' + clientSecret),
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams({
+            'grant_type': 'client_credentials'
+        })
+    });
+
+    if (!response.ok) {
+        throw new Error('Error fetching access token');
+    }
+
+    const data = await response.json();
+    return data.access_token; // Return the access token
+}
+
+let offset = 0;
+
+async function fetchSongs() {
+    const searchQuery = document.getElementById("searchInput").value;
+
+    try {
+        const accessToken = await getAccessToken();
+        const url = `https://api.spotify.com/v1/search?q=${searchQuery}&type=track&limit=10&offset=${offset}`;
+
+        const response = await fetch(url, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Error fetching songs');
+        }
+
+        const data = await response.json();
+        const songs = data.tracks.items;
+
+        if (songs.length > 0) {
+            renderSongs(songs);
+            offset += 10; // Increase offset for next page
+        } else {
+            console.log("No songs found");
+        }
+    } catch (error) {
+        console.error("Error fetching songs:", error);
+    }
+}
+
+// Add "Load More" functionality
+const loadMoreButton = document.getElementById('loadMoreBtn');
+loadMoreButton.addEventListener('click', fetchSongs);
+
+
+function renderSongs(songs) {
+    const songListContainer = document.querySelector('.song-list');
+    songListContainer.innerHTML = ''; // Clear existing songs
+
+    songs.forEach(song => {
+        const songItem = document.createElement('div');
+        songItem.classList.add('song-item1');
+
+        const previewButton = song.preview_url ? 
+            `<button onclick="playPreview('${song.preview_url}')">Play Preview</button>` :
+            `<a href="${song.external_urls.spotify}" target="_blank">Listen on Spotify</a>`;
+
+        songItem.innerHTML = `
+            <img src="${song.album.images[0].url}" alt="${song.name}">
+            <p>${song.name} - ${song.artists.map(artist => artist.name).join(', ')}</p>
+            ${previewButton}
+        `;
+
+        songItem.addEventListener('click', () => {
+            const songFile = song.preview_url;
+            if (songFile) {
+                playPreview(songFile);
+            } else {
+                alert('Preview not available for this song.');
+            }
+        });
+
+        songListContainer.appendChild(songItem);
+    });
+}
+
+function playPreview(previewUrl) {
+    const audioPlayer = document.getElementById('audioPlayer');
+    if (!previewUrl) {
+        console.error('Preview URL not found');
+        return;
+    }
+
+    audioPlayer.src = previewUrl;
+
+    // Add error handling for playback issues
+    audioPlayer.play().catch(error => {
+        console.error('Error playing song:', error);
+        alert('Sorry, this song preview is not available or could not be played.');
+    });
+}
+
+
+function displaySong(song, previewUrl) {
+    const songElement = document.createElement('div');
+    const spotifyLink = song.external_urls ? song.external_urls.spotify : '#'; // Get the Spotify URL
+
+    songElement.innerHTML = `
+        <img src="${song.album.images[0].url}" alt="${song.name}">
+        <p>${song.name} - ${song.artists.map(artist => artist.name).join(', ')}</p>
+        ${previewUrl ? 
+            `<button onclick="playPreview('${previewUrl}')">Play Preview</button>` : 
+            `<a href="${spotifyLink}" target="_blank">Listen on Spotify</a>`}
+    `;
+    document.getElementById('songList').appendChild(songElement);
+}
+
+
+// Event listener for search input
+const searchInput = document.getElementById('searchInput');
+searchInput.addEventListener('input', () => {
+    const query = searchInput.value.trim();
+    if (query) {
+        fetchSongs();
+    }
+});
+function openInSpotify(url) {
+    window.open(url, '_blank');
+}
+document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('input', () => {
+        const query = searchInput.value.trim();
+        if (query) {
+            fetchSongs();
+        }
     });
 });
 

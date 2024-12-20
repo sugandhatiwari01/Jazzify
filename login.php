@@ -8,10 +8,12 @@ $action = $_POST['action'];
     $servername = "localhost";
     $username = "root";
     $password = "";
-    $db = "jazzify";
+    $db = "imp";
 
     // Establish connection
-    $conn = mysqli_connect($servername, $username, $password, $db);
+
+
+    $conn = mysqli_connect($servername, $username, $password, $db,3307);
     if (!$conn) {
         die("Connection error: " . mysqli_connect_error());
     } 
@@ -25,7 +27,14 @@ $action = $_POST['action'];
             exit();
         } else {
             $query = "INSERT INTO sign (name, email, password) VALUES ('$name','$email','$pass')";
-
+            $check=mail($email,"Welcome User","HELLO!" .$name ."🎶🎶Welcome to Jazzify🎷.Hope you enjoy streaming music without any interruptions whenever you want and wherever you please.","From: sugandhaproject25@gmail.com");
+            if($check){
+                echo "success mail";
+            }
+            else{
+                echo "not mailed";
+            }
+            
            mysqli_query($conn,$query);
             header("Location: main.html");
             exit();
@@ -50,7 +59,6 @@ else{
     mysqli_close($conn);
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -137,11 +145,74 @@ else{
                 font-weight: 500;
             }
             .btn-field {
-                width: 100%;
-                display: flex;
-                justify-content: space-between;
-                margin-top: 20px;
-            }
+    width: 100%;
+    display: flex;
+    flex-direction: column; /* Stack buttons vertically */
+    gap: 20px; /* Add some space between buttons */
+    margin-top: 20px;
+}
+
+.toggle {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px; /* Space between Sign Up and Sign In buttons */
+}
+
+.toggle button {
+    flex-grow: 1;
+    background: #2563eb;
+    color: white;
+    height: 45px;
+    border-radius: 30px;
+    border: 0;
+    outline: 0;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s ease-in-out;
+    padding: 0 20px;
+}
+
+.toggle button:hover {
+    background: #1d4ed8;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.toggle button:active {
+    transform: translateY(1px);
+    box-shadow: none;
+}
+
+.toggle button.disable {
+    background: #3b4556;
+    color: #9ca3af;
+    cursor: hand;
+    opacity: 0.6;
+}
+
+.sub {
+    display: flex;
+    justify-content: center; /* Center the submit button */
+}
+
+.sub button {
+    width: 100%;
+    max-width: 300px;
+    background: #4CAF50;
+    color: white;
+    height: 45px;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: 600;
+    transition: background 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+.sub button:hover {
+    background: #45a049;
+}
+
             .btn-field button {
                 flex-basis: 48%;
                 background: #2563eb;
@@ -157,19 +228,53 @@ else{
                 background: #1d4ed8;
             }
             .input-group {
-                height: 280px;
+                margin:50px 0 40px 0;
+                height: 200px;
             }
             .btn-field button.disable {
                 background: #3b4556;
                 color: #9ca3af;
                 cursor: hand;
             }
+
+/* Error message styling */
+.error-message {
+    font-size: 10px; /* Smaller text size */
+    margin-top: 4px;
+    color: red;
+}
+
+
+
+            /* Prevent white background on autofill and ensure white text */
+input:-webkit-autofill {
+    background-color: #1f2937 !important;
+    color: white !important; /* Ensures text remains white in autofill */
+    box-shadow: 0 0 0 30px #1f2937 inset !important; /* Prevent white background */
+    transition: color 5000s ease-in-out 0s; /* Fixes some autofill issues with text color */
+}
+
+/* Focused inputs and autofilled inputs should have white text */
+input:focus, input:active, input:-webkit-autofill:focus {
+    background-color: #1f2937 !important;
+    color: white !important; /* Ensure text remains white */
+    border: 1px solid #3b4556 !important; /* Optional: adds a border on focus */
+}
+
         </style>
     </head>
     <body>
         <div class="container">
             <div class="form-box">
                 <h1 id="title">Sign Up</h1>
+
+                <div class="btn-field">
+                       <div class="toggle"><button type="button" id="signupBtn">Sign Up</button>
+                        <button type="button" id="signinBtn" >Sign In</button>
+                        </div> 
+
+                    </div>
+
                 <form id="loginForm" method="POST" action="login.php">
 <input type="hidden" name="action" id="formAction" value="signup">
                     <div class="input-group">
@@ -188,21 +293,21 @@ else{
                         
                     </div>
                     <div class="btn-field">
-                        <button type="submit" id="signupBtn">Sign Up</button>
-                        <button type="submit" id="signinBtn" >Sign In</button>
+                      
+                       <div class="sub"> <button type="submit" id="submitBtn" >Submit</button></div>
+
                     </div>
                 </form>
             </div>
         </div>
     </body>    
     <script>
-        // Get references to the elements
+  // Get references to the elements
 let signupBtn = document.getElementById("signupBtn");
 let signinBtn = document.getElementById("signinBtn");
 let nameField = document.getElementById("nameField");
 let title = document.getElementById("title");
 let formAction = document.getElementById("formAction");
-
 
 // Toggle between Sign Up and Sign In
 signinBtn.onclick = function() {
@@ -212,7 +317,7 @@ signinBtn.onclick = function() {
     title.innerHTML = "Sign In";
     signupBtn.classList.add("disable");
     signinBtn.classList.remove("disable");
-        formAction.value = "login"; 
+    formAction.value = "login"; 
 };
 
 signupBtn.onclick = function() {
@@ -222,31 +327,78 @@ signupBtn.onclick = function() {
     title.innerHTML = "Sign Up";
     signupBtn.classList.remove("disable");
     signinBtn.classList.add("disable");
-        formAction.value = "signup"; 
+    formAction.value = "signup"; 
 };
 
 // Adding basic validation
 document.getElementById("loginForm").onsubmit = function(event) {
-    event.preventDefault();
-    let name = document.getElementById("nameInput").value;
+    event.preventDefault(); // Prevent form submission
 
+    // Clear any previous error messages
+    clearErrorMessages();
+
+    let name = document.getElementById("nameInput").value;
     let email = document.getElementById("emailInput").value;
     let password = document.getElementById("passwordInput").value;
+    let valid = true;
 
-
-if(formAction.value=="signup"){if(name==""){alert("Enter Name"); return;}}
-
-    if (!email.includes("@")) {
-        alert("Please enter a valid email address.");
-        return;
+    // Validation for Sign Up form
+    if (formAction.value == "signup") {
+        if (name == "") {
+            showError("nameInput", "Please enter your name.");
+            valid = false;
+        }
+        if (name.length > 50 ) {
+            showError("nameInput", "Name should be atmost 50 characters ");
+            valid = false;
+        }
     }
 
-    if (password.length < 6) {
-        alert("Password should be at least 6 characters.");
-        return;
+    // Validation for email
+    let emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    if (email == "" || !emailRegex.test(email)) {
+        showError("emailInput", "Please enter a valid email address.");
+        valid = false;
     }
 
-document.getElementById("loginForm").submit();
+    // Validation for password
+    if (password.length < 6 ) {
+        showError("passwordInput", "Password should be at least 6 characters.");
+        valid = false;
+    }
+    if (password.length > 50 ) {
+        showError("passwordInput", "Password should be at most 50 characters.");
+        valid = false;
+    }
+
+    // If validation passes, submit the form
+    if (valid) {
+        document.getElementById("loginForm").submit();
+    }
 };
+
+// Function to show error message below the input field
+function showError(inputId, message) {
+    let inputField = document.getElementById(inputId);
+    let errorMessage = document.createElement("div");
+    errorMessage.classList.add("error-message");
+    errorMessage.style.color = "red";
+    
+    errorMessage.innerText = message;
+
+    // Check if error message already exists, if not, add it
+    if (!inputField.nextElementSibling || !inputField.nextElementSibling.classList.contains("error-message")) {
+        inputField.parentNode.appendChild(errorMessage);
+    }
+}
+
+// Function to clear error messages
+function clearErrorMessages() {
+    let errorMessages = document.querySelectorAll(".error-message");
+    errorMessages.forEach(function(message) {
+        message.remove();
+    });
+}
+
     </script>
 </html>

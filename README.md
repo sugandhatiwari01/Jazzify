@@ -7,14 +7,14 @@ HTML,CSS, JavaScript and Tailwind CSS
 
 LOGIN PAGE
 
-![image](https://github.com/user-attachments/assets/54500b1b-4acf-4d73-9b81-848ee9be0177)
+![image](https://github.com/user-attachments/assets/f60854f4-e97d-4284-80f1-c43820afd517)
 
 
 
 
 MAIN PAGE
 
-![image](https://github.com/user-attachments/assets/4d16c2f9-04f0-45dd-b50e-13505e4e0f8f)
+![Screenshot 2024-12-20 151830](https://github.com/user-attachments/assets/682ec98f-c3e9-4cb6-9cc2-1e3197ab58db)
 
 
-![image](https://github.com/user-attachments/assets/fbba5962-f209-4f9f-a0a3-2bfb137c18f1)
+![image](https://github.com/user-attachments/assets/78121b8d-2571-454a-bdbb-8bd2868a259c)

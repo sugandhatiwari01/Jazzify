@@ -7,7 +7,7 @@ HTML,CSS, JavaScript and Tailwind CSS
 
 LOGIN PAGE
 
-![image](https://github.com/user-attachments/assets/f60854f4-e97d-4284-80f1-c43820afd517)
+![image](https://github.com/user-attachments/assets/64b58d2f-6f09-4472-9ed9-5f83e200f4e7)
 
 
 

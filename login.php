@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $num = mysqli_num_rows($result);
 
         if ($num > 0) {
-            echo "<script>alert('Email already registered'); window.location.href='login.php';</script>";
+            echo "<script>alert('Email already registered'); window.location.href='index.php';</script>";
             exit();
         } else {
             $hashed_pass = password_hash($pass, PASSWORD_BCRYPT);
@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             header("Location: main.html");
             exit();
         } else {
-            echo "<script>alert('Email or password wrong'); window.location.href='login.php';</script>";
+            echo "<script>alert('Email or password wrong'); window.location.href='index.php';</script>";
         }
     }
 
@@ -301,7 +301,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                     </div>
 
-                <form id="loginForm" method="POST" action="login.php">
+                <form id="loginForm" method="POST" action="index.php">
 <input type="hidden" name="action" id="formAction" value="signup">
                     <div class="input-group">
                         <div class="input-field" id="nameField">
